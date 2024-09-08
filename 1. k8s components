@@ -1,0 +1,9 @@
+1.Master components
+   - kube-apiserver
+   - etcd
+   - kube-scheduler
+   - kube-controller manager
+2.Node components
+   - Kubelet
+   - kube proxy
+   - container runtime(eg. docker, containerd
