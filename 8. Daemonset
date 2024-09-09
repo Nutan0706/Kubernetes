@@ -84,3 +84,16 @@ Explanation of Key Sections:
 7. Secret:
  - The New Relic license key is stored as a Kubernetes secret. Replace <YOUR_NEW_RELIC_LICENSE_KEY_BASE64_ENCODED> with your actual New Relic license key, base64 encoded.
 
+====================================================
+Commands:-
+1.kubectl create -f file.yaml
+2.kubeclt get daemonsets
+3.kubectl get daemonsets -n <namespaces>
+4.kubectl describe daemonsets <name>
+5.kubectl apply -f file.yaml
+6.kubectl delete daemonset <name>
+7.kubectl get daemonset <name> status
+8.kubectl edit daemonset <name>
+9.kubectl get daemonset <name> -o yaml
+10.kubectl get pods --selector=<label-selector>
+11.kubectl delete pod <pod_name>
