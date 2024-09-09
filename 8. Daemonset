@@ -1,1 +1,86 @@
+1. A daemonSet ensures that all(or some) nodes run a copy of a pod
+2. It is typically used for running background services or monitoring agents on every node, such as logging, monitoring, or network services.
+   - running a cluster storage daemon on every node
+   - running a logs collection daemon on every node
+   - running a node monitoring daemon on every node
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+   name: newrelic-agent
+   namespace: newrelic
+   labels:
+     app: newrelic-agent
+spec:
+   selector:
+     matchLabels:
+       app: newrelic-agent
+   template:
+     metadata:
+       labels:
+         app: newrelic-agent
+     spec:
+       containers:
+       - name: newrelic-agent
+         image: mewrelic/infrastrucure-k8s:latest
+         env:
+         - name: NRIA_LICENSE_KEY
+           valueFrom:
+             secretKeyRef:
+               name: newrelic-license-key
+               key: license
+         - name: NRIA_VERBOSE
+           value: "1"
+         - name: NRIA_DISPLAY_NAME
+           valueFrom:
+             fieldRef:
+               fieldPath: spec.nodeName
+         volumeMounts:
+         - name: host-root
+           mountPath: /host
+           readOnly: true
+         - name: docker-socket
+           mountPath: /var/run/docker.sock
+           readOnly: true
+         securityContext:
+           privileged: true
+       volumes:
+       - name: host-root
+         hostPath:
+            path: /
+       - name: docker-socket
+         hostPath:
+            path: /var/run/docker.sock
+       nodeSelector:
+          kubernetes.io/os: linux
+       serviceAccountName: newrelic-agent
+       tolerations:
+       - key: "node-role.kubernetes.io/master"
+         effect: NoSchedule
+==========================================================
+
+Explanation of Key Sections:
+1. DaemonSet:
+ - The DaemonSet ensures that the New Relic agent runs on all nodes in your cluster.
+ - The newrelic/infrastructure-k8s image is used to deploy the New Relic agent.
+
+2. Environment Variables:
+ - NRIA_LICENSE_KEY: This is the New Relic license key required to authenticate the agent. It’s stored in a Kubernetes secret for security reasons.
+ - NRIA_DISPLAY_NAME: Set to the node’s name so that the agent reports as the correct node in New Relic.
+
+3. Volumes:
+ - The agent needs access to the host file system (/host) and the Docker socket (/var/run/docker.sock) to collect infrastructure data.
+
+4. SecurityContext:
+ - The agent needs privileged access to the host system to collect metrics, so privileged: true is set.
+
+5. Node Selector and Tolerations:
+ - The DaemonSet is configured to run only on Linux nodes.
+ - Tolerations allow the DaemonSet to run on master nodes if needed.
+
+6. ServiceAccount:
+ - The DaemonSet runs using a service account (newrelic-agent), which can be further configured with RBAC permissions if needed.
+
+7. Secret:
+ - The New Relic license key is stored as a Kubernetes secret. Replace <YOUR_NEW_RELIC_LICENSE_KEY_BASE64_ENCODED> with your actual New Relic license key, base64 encoded.
 
