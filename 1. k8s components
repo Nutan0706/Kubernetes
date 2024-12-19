@@ -1,9 +1,10 @@
 1.Master components
-   - kube-apiserver
-   - etcd
-   - kube-scheduler
-   - kube-controller manager
+   - kube-apiserver : The main server that manages communication between all the parts of k8s and lets you control the cluster 
+   - etcd : A database that stores all the info. about your k8s cluster
+   - kube-scheduler : Decides which machine(nodes) should run a new pod
+   - kube-controller manager :- Keeps everything in the cluster working as expected by running controller.(like deployment have to 3 pods)
+
 2.Node components
-   - Kubelet
-   - kube proxy
-   - container runtime(eg. docker, containerd
+   - Kubelet : make sure the container in a pod are running properly on a node.
+   - kube proxy : Manages network connnections so pods and service can talk to each other.
+   - container runtime(eg. docker, containerd) :Run the container on your machine
