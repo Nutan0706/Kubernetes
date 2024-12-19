@@ -1,1 +1,44 @@
+-> A replication controller(RC) in kubernetes ensures that a specified number of pod replicas are running at all times.
+-> if a pod crashes or is deleted, the replication controller replaces it to maintain the desired state.
+-> However, it's largely replaces by replicaSets, which are more flexible.
 
+Key features of RC
+ 1. Ensure the correct number of pods are running.
+ 2. automatically replaces pods if they fail
+ 3. Scales the application up or down
+
+command 
+1. create a RC -> kubectl apply -f replication-conroller.yaml
+2. get all RC -> kubectl get rc
+3. describe RC -> kubectl describle rc nginx-rc 
+4. scale RC -> kubectl scale rc nginx-rc --replica=5 
+5. delete RC -> kubectl delete rc nginx-rc 
+6. delete RC but keep pod running -> kubectl delete rc nginx-rc --cascade=orphan
+7. edit replication controller -> kubectl get rc nginx-rc
+
+Example YAML for a Replication Controller:
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: nginx-rc 
+  labels:
+     app: nginx
+spec:
+  replicas: 3
+  selector:
+    app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      container:
+      - name: nginx
+        image: nginx:1.21
+        ports:
+        - container: 80
+
+
+Notes:
+1. selector : The RC uses labels to identify which pods it should manages
+2. ReplicaSets vs Replication Controllers: ReplicaSets are an updated version of RC and are recommended for most use cases. ReplicaSets also support set-based selectors, whereas RCs only support equality-based selectors.
