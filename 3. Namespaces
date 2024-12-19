@@ -1,1 +1,8 @@
 
+Namespace :- in k8s is way to divide a cluster into separate, smaller sections so multiple teams or projects can use it without interfering with each other.
+
+Default Namespace in kubernetes
+1. Default : The Namespace where resources go if you don't specify a Namespace
+2. kube-system : contains all the system components and resources created by kubernetes itself(like the kube-dns)
+3. kube-public : A Namespace that is readable by everyone and often used for publicy accessible resources
+4. kube-node-lease : manages heartbeats from nodes to help the cluster track node health and avaliability
