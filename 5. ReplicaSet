@@ -1,1 +1,55 @@
+-> A ReplicaSet (RS) in Kubernetes ensures a specified number of pod replicas are running at all times. 
+-> It's an updated version of Replication Controller with additional support for set-based selectors, making it more flexible.
+
+Key Features of ReplicaSet:
+ 1. Ensures the correct number of pod replicas are always running.
+ 2. Replaces crashed or deleted pods automatically
+ 3. works as part of Deployment for higher-level pod management
+
+
+Command
+ 1.create RS -> kubectl apply -f replicaset.yaml
+ 2.all RS -> kubectl get rs 
+ 3.describe -> kubectl describe rs nginx-rs 
+ 4.scale rs -> kubectl scale rs nginx-rs --replicas=5
+ 5.delete a rs -> kubectl delete rs nginx-rs 
+ 6.delete rs but keep pods running -> kubectl delete rs nginx-rs --crashed=orphan
+ 7.edit rs -> kubectl edit rs nginx-rs
+
+Example YAML for a ReplicaSet:
+
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+   name: nginx-rs
+   labels:
+     app: nginx 
+spec: 
+   replicas: 3
+   selectors:
+      matchLables:
+        app: nginx
+   template:
+      metadata:
+        labels:
+          app: nginx
+      spec:
+        container:
+        - name: nginx
+          image: nginx:1.21
+          ports:
+          - container: 80
+
+Key Differences Between ReplicaSet and Replication Controller:
+ReplicaSet
+-> Supports equality- and set-based selectors
+-> 	Works with Deployments
+
+Replication Controller
+-> Only supports equality-based selectors
+-> Standalone (less common now)
+
+Notes:
+-> Selector: The matchLabels in the selector must match the pod labels for management.
+-> Integration with Deployments: ReplicaSets are commonly managed by Deployments, which provide advanced features like rolling updates and rollbacks.
 
